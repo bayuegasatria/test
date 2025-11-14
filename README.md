@@ -78,3 +78,5 @@ flutter run
 ```
 flutter build apk --release
 ```
+## TENTANG ROLE
+untuk role admin pinjam kendaraan bisa ditambahkan ke tabel 'petugas' dengan jenis 'Pengelola Kendaraan Dinas' dan untuk admin bmn jenisnya 'Petugas TIK' **PENULISAN HARUS SAMA** karena filter langsung pakai jenis 
