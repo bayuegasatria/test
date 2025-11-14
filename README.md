@@ -70,7 +70,7 @@ dan
 ```
 flutter pub get
 ```
-run 
+- untuk run ini syntax nya
 ```
 flutter run
 ```
