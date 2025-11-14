@@ -11,16 +11,16 @@
      - Buka aplikasi lalu masuk ke Projects => More Action => SDK Manager
      - Ke menu Languages & Frameworks => Android SDK
      - Ke menu SDK platform lalu install 
-       1.Android 16.0 ("Baklava") 36.0
-       2.Andorid 14.0 ("UpsideDownCake") 34
+       1. Android 16.0 ("Baklava") 36.0
+       2. Andorid 14.0 ("UpsideDownCake") 34
      - Ke menu SDK Tools lalu install
-       1.Android SDK Build-Tools
-       2.NDK (Side by side)
-       3.Android SDK Command-line Tools (latest)
-       4.Cmake
-       5.Android Emulator
-       6.Android Emulator hypervisor driver (installer)
-       7.Android SDK Platform-Tools
+       1. Android SDK Build-Tools
+       2. NDK (Side by side)
+       3. Android SDK Command-line Tools (latest)
+       4. Cmake
+       5. Android Emulator
+       6. Android Emulator hypervisor driver (installer)
+       7. Android SDK Platform-Tools
 ##API 
 - Folder API di tempatkan di htdocs (..\htdocs\API)
 - Koneksi database ada di config.php
@@ -40,10 +40,10 @@ $conn->set_charset("utf8");
 ?>
 ```
 - Cronjob
-  1.auto_mulai_pinjam.php (untuk update status pinjam dari menunggu ke berjalan) per 1 menit
-  2.auto_tolak_pengajuan.php (untuk tolak otomatis pengajuan yang tanggal kembali nya udah lewat dari waktu sekarang) per 1 menit
-  3.notif_telat_kembalikan.php (untuk kirim notif saat peminjaman melewati deadline) per 1 menit
-  4.notif30mbefore.php (untuk kirim notif 30 menit sebelum deadline) per 1 menit
+  1. auto_mulai_pinjam.php (untuk update status pinjam dari menunggu ke berjalan) per 1 menit
+  2. auto_tolak_pengajuan.php (untuk tolak otomatis pengajuan yang tanggal kembali nya udah lewat dari waktu sekarang) per 1 menit
+  3. notif_telat_kembalikan.php (untuk kirim notif saat peminjaman melewati deadline) per 1 menit
+  4. notif30mbefore.php (untuk kirim notif 30 menit sebelum deadline) per 1 menit
 
 ##DATABASE
   File "database sibob mobile.sql" di dalam masih ada data master user inventaris dan lain lain. database nya gabung peminjaman dan pemeliharaan.
