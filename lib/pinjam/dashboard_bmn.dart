@@ -4,6 +4,8 @@ import 'package:newapp/pinjam/dashboard.dart';
 import 'package:newapp/pinjam/datamobilpage.dart';
 import 'package:newapp/pinjam/historypinjampage.dart';
 import 'package:newapp/pinjam/reportpage.dart';
+import 'package:newapp/pinjam/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class DashboardBmn extends StatefulWidget {
   const DashboardBmn({super.key});
@@ -54,6 +56,8 @@ class _DashboardBmnState extends State<DashboardBmn> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context, listen: false);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -140,17 +144,18 @@ class _DashboardBmnState extends State<DashboardBmn> {
               borderColor: const Color.fromARGB(255, 10, 253, 30),
               onTap: () => handleMenuSelect('laporan'),
             ),
-            _menuCard(
-              context,
-              title: 'Perpindahan',
-              subtitle: 'Perpindahan dbr dan distribusi bmn',
-              description: 'Lakukan perpindahan dbr atau distribusi bmn',
-              icon: Icons.move_down,
-              iconBgColor: const Color.fromARGB(255, 217, 245, 61),
-              isSelected: selectedMenu == 'perpindahan',
-              borderColor: const Color.fromARGB(255, 173, 235, 2),
-              onTap: () => handleMenuSelect('perpindahan'),
-            ),
+            if (user.role == 'AdminTIK')
+              _menuCard(
+                context,
+                title: 'Perpindahan',
+                subtitle: 'Perpindahan dbr dan distribusi bmn',
+                description: 'Lakukan perpindahan dbr atau distribusi bmn',
+                icon: Icons.move_down,
+                iconBgColor: const Color.fromARGB(255, 217, 245, 61),
+                isSelected: selectedMenu == 'perpindahan',
+                borderColor: const Color.fromARGB(255, 173, 235, 2),
+                onTap: () => handleMenuSelect('perpindahan'),
+              ),
           ],
         ),
       ),

@@ -44,11 +44,7 @@ void showAccountPanel(BuildContext context) {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
 
-                    children: [
-                      Text(user.nip),
-                      Text(user.namarole),
-                      Text(user.div),
-                    ],
+                    children: [Text(user.nip), Text(user.div)],
                   ),
                 ),
 
