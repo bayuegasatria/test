@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/pemeliharaan/bmn_non_tik/aduan_nontik/daftar_aduan_kerusakan_nontik.dart';
 import 'package:newapp/pemeliharaan/bmn_tik/daftar_aduan/daftar_aduan_kerusakan_tik.dart';
+import 'package:newapp/pinjam/dashboard.dart';
 
 class DashboardMaintenance extends StatefulWidget {
   const DashboardMaintenance({super.key});
@@ -36,15 +37,22 @@ class _DashboardMaintenanceState extends State<DashboardMaintenance> {
     });
   }
 
+  void _handleBackToDashboard() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const Dashboard()),
+      (Route<dynamic> route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        toolbarHeight: 90,
+        automaticallyImplyLeading: false,
+        toolbarHeight: 100,
         title: const Text(
-          "Maintenance BMN",
+          "Sistem Perbaikan",
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -52,6 +60,32 @@ class _DashboardMaintenanceState extends State<DashboardMaintenance> {
           ),
         ),
         backgroundColor: const Color(0xFF1E88E5),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(color: Colors.blueGrey, width: 1),
+              ),
+            ),
+            padding: const EdgeInsets.all(12),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: _handleBackToDashboard,
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  "Menu Perbaikan",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
 
       body: Padding(
@@ -62,7 +96,7 @@ class _DashboardMaintenanceState extends State<DashboardMaintenance> {
 
             // --- Menu 1: Maintenance Non-TIK ---
             _menuCard(
-              title: "Maintenance Non-TIK",
+              title: "Perbaikan Non-TIK",
               subtitle: "Pemeliharaan barang non tik",
               description:
                   "Cek dan kelola aduan pemeliharaan non teknologi informasi",
@@ -75,7 +109,7 @@ class _DashboardMaintenanceState extends State<DashboardMaintenance> {
 
             // --- Menu 2: Maintenance TIK ---
             _menuCard(
-              title: "Maintenance TIK",
+              title: "Perbaikan TIK",
               subtitle: "Kerusakan dan pemeliharaan perangkat TIK",
               description:
                   "Laporkan atau kelola kendala pada komputer, printer, dan perangkat TIK lainnya",

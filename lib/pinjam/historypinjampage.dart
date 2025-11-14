@@ -51,7 +51,7 @@ class _HistoryPinjamPageState extends State<HistoryPinjamPage> {
         toolbarHeight: 91,
         automaticallyImplyLeading: false,
         title: const Text(
-          "History Peminjaman",
+          "History Peminjaman Kendaraan",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

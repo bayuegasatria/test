@@ -223,51 +223,54 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                             horizontal: 20,
                             vertical: 0,
                           ),
-                          child: GridView.count(
-                            crossAxisCount: 4,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            childAspectRatio: 0.8,
-                            children: [
-                              _buildMenuItem(
-                                context,
-                                iconPath: 'assets/icons/rent.png',
-                                title: "Peminjaman \nKendaraan",
-                                onTap: () {
-                                  Navigator.push(
+                          child: Center(
+                            child: GridView.count(
+                              crossAxisCount: 3,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              childAspectRatio: 0.8,
+                              children: [
+                                _buildMenuItem(
+                                  context,
+                                  iconPath: 'assets/icons/rent.png',
+                                  title: "Peminjaman \nKendaraan",
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const AccPage(),
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                _buildMenuItem(
+                                  context,
+                                  iconPath: 'assets/icons/optimizing.png',
+                                  title: "Pemeliharaan",
+                                  onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const AccPage(),
+                                      builder: (context) =>
+                                          const DashboardMaintenance(),
                                     ),
-                                  );
-                                },
-                              ),
-
-                              _buildMenuItem(
-                                context,
-                                iconPath: 'assets/icons/optimizing.png',
-                                title: "Pemeliharaan",
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const DashboardMaintenance(),
                                   ),
                                 ),
-                              ),
 
-                              _buildMenuItem(
-                                context,
-                                iconPath: 'assets/icons/cart.png',
-                                title: "BMN",
-                                onTap: () => Navigator.push(
+                                _buildMenuItem(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const DashboardBmn(),
+                                  iconPath: 'assets/icons/cart.png',
+                                  title: "BMN",
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const DashboardBmn(),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -294,27 +297,28 @@ Widget _buildMenuItem(
   VoidCallback? onTap,
 }) {
   final screenWidth = MediaQuery.of(context).size.width;
+
   return InkWell(
     onTap: onTap,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Flexible(
-          child: Image.asset(
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
             iconPath,
             width: screenWidth * 0.12,
             height: screenWidth * 0.12,
             fit: BoxFit.contain,
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: screenWidth * 0.03),
-        ),
-      ],
+          const SizedBox(height: 6),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: screenWidth * 0.03),
+          ),
+        ],
+      ),
     ),
   );
 }

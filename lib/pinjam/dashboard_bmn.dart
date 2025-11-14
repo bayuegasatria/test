@@ -60,7 +60,7 @@ class _DashboardBmnState extends State<DashboardBmn> {
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
         title: const Text(
-          "Sistem Perpindahan",
+          "BMN",
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -87,7 +87,7 @@ class _DashboardBmnState extends State<DashboardBmn> {
                 ),
                 const SizedBox(width: 12),
                 const Text(
-                  "Manajemen Perpindahan Barang",
+                  "Menu BMN",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
