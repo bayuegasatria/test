@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "420072414493",
+    "project_id": "bmn-bpom",
+    "storage_bucket": "bmn-bpom.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420072414493:android:3957749e75069dad0315f4",
+        "android_client_info": {
+          "package_name": "com.example.newapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv6w37LwCWPeAWLKXvWujnjbIyVSN2Fuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
