@@ -2,10 +2,10 @@
 
 ## VSCODE DAN LAIN NYA
 - Extension VS Code
-  1.DART
-  2.FLUTTER
-  3.COMPOSER (untuk notif)
-  4.PHP
+  1. DART
+  2. FLUTTER
+  3. COMPOSER (untuk notif)
+  4. PHP
 - Android Studio Narwhal 3
   1. Konfigurasi Android Studio
      - Buka aplikasi lalu masuk ke Projects => More Action => SDK Manager
