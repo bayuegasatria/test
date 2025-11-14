@@ -1,6 +1,6 @@
 # KONFIGURASI AWAL
 
-##VSCODE DAN LAIN NYA
+## VSCODE DAN LAIN NYA
 - Extension VS Code
   1.DART
   2.FLUTTER
@@ -21,7 +21,8 @@
        5. Android Emulator
        6. Android Emulator hypervisor driver (installer)
        7. Android SDK Platform-Tools
-##API 
+  
+## API 
 - Folder API di tempatkan di htdocs (..\htdocs\API)
 - Koneksi database ada di config.php
 ```
@@ -45,10 +46,10 @@ $conn->set_charset("utf8");
   3. notif_telat_kembalikan.php (untuk kirim notif saat peminjaman melewati deadline) per 1 menit
   4. notif30mbefore.php (untuk kirim notif 30 menit sebelum deadline) per 1 menit
 
-##DATABASE
+## DATABASE
   File "database sibob mobile.sql" di dalam masih ada data master user inventaris dan lain lain. database nya gabung peminjaman dan pemeliharaan.
 
-##APLIKASI 
+## APLIKASI 
 - Konfigurasi koneksi api ada di ..\lib\api\api_config.dart
 ```
 class ApiConfig {
