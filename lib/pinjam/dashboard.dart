@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:newapp/pinjam/dashboard_bmn.dart';
-import 'package:newapp/pinjam/dashboard_maintenance.dart';
+import 'package:newapp/pinjam/datamobilpage.dart';
+import 'package:newapp/pinjam/historypinjampage.dart';
+import 'package:newapp/pinjam/reportpage.dart';
 import 'package:provider/provider.dart';
 import 'package:newapp/pinjam/accpage.dart';
 import 'package:newapp/pinjam/user_provider.dart' show UserProvider;
@@ -225,7 +226,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                           ),
                           child: Center(
                             child: GridView.count(
-                              crossAxisCount: 3,
+                              crossAxisCount: 4,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               childAspectRatio: 0.8,
@@ -246,26 +247,36 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
 
                                 _buildMenuItem(
                                   context,
-                                  iconPath: 'assets/icons/optimizing.png',
-                                  title: "Pemeliharaan",
+                                  iconPath: 'assets/icons/garage.png',
+                                  title: "Data \nKendaraan",
                                   onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const DashboardMaintenance(),
+                                          const DataMobilPage(),
                                     ),
                                   ),
                                 ),
-
                                 _buildMenuItem(
                                   context,
-                                  iconPath: 'assets/icons/cart.png',
-                                  title: "BMN",
+                                  iconPath: 'assets/icons/report.png',
+                                  title: "Laporan",
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ReportPage(),
+                                    ),
+                                  ),
+                                ),
+                                _buildMenuItem(
+                                  context,
+                                  iconPath: 'assets/icons/history.png',
+                                  title: "History",
                                   onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const DashboardBmn(),
+                                          const HistoryPinjamPage(),
                                     ),
                                   ),
                                 ),

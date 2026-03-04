@@ -7,7 +7,9 @@ import 'package:newapp/pinjam/utils/laporan_aduan.dart';
 import 'package:newapp/pinjam/utils/laporan_aduan_tik.dart';
 import 'package:newapp/pinjam/utils/laporan_distribusi_bmn.dart';
 import 'package:newapp/pinjam/utils/laporan_perpindahan_dbr.dart';
+import 'package:newapp/pinjam/utils/laporan_supir.dart';
 import 'package:provider/provider.dart';
+import 'package:newapp/pinjam/utils/laporan_history.dart';
 
 class ReportPage extends StatefulWidget {
   const ReportPage({super.key});
@@ -21,12 +23,10 @@ class _ReportPageState extends State<ReportPage> {
 
   final List<String> jenisLaporanList = [
     "Laporan Peminjaman Kendaraan",
-    "Laporan Pemakaian Kendaraan",
-    "Laporan Jumlah Peminjaman",
-    "Laporan aduan TIK",
-    "Laporan aduan Non-TIK",
-    "Laporan Distribusi BMN",
-    "Laporan Perpindahan DBR",
+    "Laporan History Pemakaian Kendaraan",
+    "Laporan Statistik Pemakaian Kendaraan",
+    "Cetak History Perjalanan",
+    "Laporan Statistik Supir",
   ];
 
   @override
@@ -104,7 +104,7 @@ class _ReportPageState extends State<ReportPage> {
             // FORM SESUAI PILIHAN
             if (selectedJenis == "Laporan Peminjaman Kendaraan")
               LaporanPeminjamanForm(userRole: user.role, userDivisi: user.div),
-            if (selectedJenis == "Laporan Jumlah Peminjaman")
+            if (selectedJenis == "Laporan Statistik Pemakaian Kendaraan")
               LaporanFrekuensiForm(userDivisi: user.div, userRole: user.role),
             if (selectedJenis == "Laporan aduan TIK")
               LaporanAduanTikForm(userDivisi: user.div, userRole: user.role),
@@ -120,7 +120,15 @@ class _ReportPageState extends State<ReportPage> {
                 userDivisi: user.div,
                 userRole: user.role,
               ),
-            if (selectedJenis == "Laporan Pemakaian Kendaraan")
+            if (selectedJenis == "Cetak History Perjalanan")
+              LaporanHistoryPinjamForm(
+                userId: int.parse(user.id),
+                userNama: user.nama,
+                userRole: user.role,
+              ),
+            if (selectedJenis == "Laporan Statistik Supir")
+              LaporanKinerjaSupirForm(),
+            if (selectedJenis == "Laporan History Pemakaian Kendaraan")
               LaporanPemakaianForm(userDivisi: user.div, userRole: user.role),
           ],
         ),

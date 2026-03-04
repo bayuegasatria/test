@@ -4,6 +4,8 @@ import 'package:newapp/api/mobil_api.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart' show rootBundle;
 
 class LaporanPemakaianForm extends StatefulWidget {
   final String userRole;
@@ -110,25 +112,33 @@ class _LaporanPemakaianFormState extends State<LaporanPemakaianForm> {
 
       final pdf = pw.Document();
 
+      // 🔹 Load kop surat image
+      final Uint8List imageBytes = (await rootBundle.load(
+        'assets/images/header.jpg',
+      )).buffer.asUint8List();
+      final pw.ImageProvider kopSurat = pw.MemoryImage(imageBytes);
+
       pdf.addPage(
         pw.MultiPage(
-          pageFormat: PdfPageFormat.a4.landscape,
-          margin: const pw.EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+          pageFormat: PdfPageFormat.a4.portrait,
+          margin: const pw.EdgeInsets.fromLTRB(32, 24, 32, 24),
           build: (context) => [
+            // ===== KOP SURAT =====
             pw.Center(
-              child: pw.Text(
-                "BALAI BESAR POM DI BANJARBARU",
-                style: pw.TextStyle(
-                  fontSize: 20,
-                  fontWeight: pw.FontWeight.bold,
-                  font: pw.Font.times(),
-                ),
+              child: pw.Image(
+                kopSurat,
+                width: PdfPageFormat.a4.availableWidth,
+                alignment: pw.Alignment.center,
               ),
             ),
+
             pw.SizedBox(height: 10),
+            pw.Divider(),
+
+            // ===== JUDUL =====
             pw.Center(
               child: pw.Text(
-                "LAPORAN PEMAKAIAN KENDARAAN DINAS",
+                "LAPORAN HISTORY PEMAKAIAN KENDARAAN DINAS",
                 style: pw.TextStyle(
                   fontSize: 14,
                   fontWeight: pw.FontWeight.bold,
@@ -136,7 +146,9 @@ class _LaporanPemakaianFormState extends State<LaporanPemakaianForm> {
                 ),
               ),
             ),
-            pw.SizedBox(height: 20),
+            pw.SizedBox(height: 15),
+
+            // ===== INFO =====
             pw.Align(
               alignment: pw.Alignment.centerLeft,
               child: pw.Column(
@@ -154,6 +166,8 @@ class _LaporanPemakaianFormState extends State<LaporanPemakaianForm> {
               ),
             ),
             pw.SizedBox(height: 15),
+
+            // ===== TABEL =====
             pw.Table.fromTextArray(
               headers: [
                 "No",
@@ -162,8 +176,6 @@ class _LaporanPemakaianFormState extends State<LaporanPemakaianForm> {
                 "Tujuan",
                 "Tanggal Pinjam",
                 "Tanggal Kembali",
-                "KM Awal",
-                "KM Akhir",
               ],
               data: [
                 for (int i = 0; i < res.length; i++)
@@ -174,8 +186,6 @@ class _LaporanPemakaianFormState extends State<LaporanPemakaianForm> {
                     res[i]['tujuan'] ?? "-",
                     res[i]['tanggal_berangkat'] ?? "-",
                     res[i]['tanggal_pengembalian'] ?? "-",
-                    res[i]['km_awal'] ?? "-",
-                    res[i]['km_akhir'] ?? "-",
                   ],
               ],
               headerStyle: pw.TextStyle(
@@ -186,6 +196,29 @@ class _LaporanPemakaianFormState extends State<LaporanPemakaianForm> {
               border: pw.TableBorder.all(width: 0.5),
               headerDecoration: const pw.BoxDecoration(
                 color: PdfColors.grey300,
+              ),
+            ),
+
+            pw.SizedBox(height: 40),
+
+            // ===== AREA TANDA TANGAN =====
+            pw.Align(
+              alignment: pw.Alignment.centerRight,
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                children: [
+                  pw.Text("Mengetahui,", style: pw.TextStyle(fontSize: 11)),
+                  pw.SizedBox(height: 4),
+                  pw.Text(
+                    "Kepala Tata Usaha",
+                    style: pw.TextStyle(fontSize: 11),
+                  ),
+                  pw.SizedBox(height: 60),
+                  pw.Text(
+                    "( ________________________ )",
+                    style: pw.TextStyle(fontSize: 11),
+                  ),
+                ],
               ),
             ),
           ],

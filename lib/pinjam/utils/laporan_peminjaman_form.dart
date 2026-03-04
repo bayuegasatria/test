@@ -3,6 +3,8 @@ import 'package:newapp/api/laporan_api.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart' show rootBundle;
 
 class LaporanPeminjamanForm extends StatefulWidget {
   final String userRole;
@@ -149,23 +151,26 @@ class _LaporanPeminjamanFormState extends State<LaporanPeminjamanForm> {
 
       final pdf = pw.Document();
 
+      final Uint8List imageBytes = (await rootBundle.load(
+        'assets/images/header.png',
+      )).buffer.asUint8List();
+      final pw.ImageProvider kopSurat = pw.MemoryImage(imageBytes);
+
       pdf.addPage(
         pw.MultiPage(
-          pageFormat: PdfPageFormat.a4.landscape,
+          pageFormat: PdfPageFormat.a4.portrait,
           margin: const pw.EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+
           build: (context) => [
-            // ===== Header Gambar =====
             pw.Center(
-              child: pw.Text(
-                "BALAI BESAR POM  DI BANJARBARU",
-                style: pw.TextStyle(
-                  fontSize: 20,
-                  fontWeight: pw.FontWeight.bold,
-                  font: pw.Font.times(),
-                ),
+              child: pw.Image(
+                kopSurat,
+                width: PdfPageFormat.a4.availableWidth,
+                alignment: pw.Alignment.center,
               ),
             ),
             pw.SizedBox(height: 10),
+            pw.Divider(),
 
             // ===== Judul Dokumen =====
             pw.Center(
@@ -203,9 +208,7 @@ class _LaporanPeminjamanFormState extends State<LaporanPeminjamanForm> {
             pw.Table.fromTextArray(
               headers: [
                 "No",
-                "Nomor Peminjaman",
                 "Nama Peminjam",
-                "Bidang",
                 "Kendaraan Dinas",
                 "Waktu Pinjam",
                 "Waktu Kembali",
@@ -215,9 +218,7 @@ class _LaporanPeminjamanFormState extends State<LaporanPeminjamanForm> {
                 for (int i = 0; i < res.length; i++)
                   [
                     "${i + 1}",
-                    res[i]['no_pengajuan'] ?? "-",
                     res[i]['nama_pengaju'] ?? "-",
-                    res[i]['nama_bidang'] ?? "-",
                     res[i]['nama_kendaraan'] ?? "-",
                     res[i]['tanggal_mulai'] ?? "-",
                     res[i]['tanggal_kembali'] ?? "-",
@@ -235,9 +236,32 @@ class _LaporanPeminjamanFormState extends State<LaporanPeminjamanForm> {
                 color: PdfColors.grey300,
               ),
             ),
-
-            pw.SizedBox(height: 40),
           ],
+
+          // ✅ TANDA TANGAN — TIDAK AKAN PERNAH TERPOTONG HALAMAN
+          footer: (context) => pw.Padding(
+            padding: const pw.EdgeInsets.only(top: 20),
+            child: pw.Align(
+              alignment: pw.Alignment.centerRight,
+              child: pw.Column(
+                mainAxisSize: pw.MainAxisSize.min,
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                children: [
+                  pw.Text("Mengetahui,", style: pw.TextStyle(fontSize: 11)),
+                  pw.SizedBox(height: 4),
+                  pw.Text(
+                    "Kepala Tata Usaha",
+                    style: pw.TextStyle(fontSize: 11),
+                  ),
+                  pw.SizedBox(height: 60),
+                  pw.Text(
+                    "( ________________________ )",
+                    style: pw.TextStyle(fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       );
 

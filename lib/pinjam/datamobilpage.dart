@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newapp/pinjam/dashboard_bmn.dart';
+import 'package:newapp/pinjam/dashboard.dart';
 import 'package:newapp/pinjam/detailmobilpage.dart';
 import '../api/mobil_api.dart';
 
@@ -72,7 +72,7 @@ class _DataMobilPageState extends State<DataMobilPage> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const DashboardBmn(),
+                              builder: (_) => const Dashboard(),
                             ),
                           );
                         },

@@ -3,6 +3,8 @@ import 'package:newapp/api/laporan_api.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart' show rootBundle;
 
 class LaporanFrekuensiForm extends StatefulWidget {
   final String userRole;
@@ -116,7 +118,6 @@ class _LaporanFrekuensiFormState extends State<LaporanFrekuensiForm> {
     }
 
     try {
-      // 🔹 Ambil data laporan
       final res = await LaporanApi.getLaporanFrekuensi(
         kelompok: kelompok!,
         divisi: selectedDivisi,
@@ -130,182 +131,96 @@ class _LaporanFrekuensiFormState extends State<LaporanFrekuensiForm> {
         return;
       }
 
-      // 🔹 Siapkan dokumen PDF
       final pdf = pw.Document();
+
+      // 🔹 Load kop surat
+      final Uint8List imageBytes = (await rootBundle.load(
+        'assets/images/header.jpg',
+      )).buffer.asUint8List();
+      final pw.ImageProvider kopSurat = pw.MemoryImage(imageBytes);
 
       pdf.addPage(
         pw.MultiPage(
-          pageFormat: PdfPageFormat.a4.landscape,
-          margin: const pw.EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-          build: (context) {
-            final isKelompokDivisi = kelompok == "bidang";
-
-            // 🔹 Judul utama dokumen
-            final title = "LAPORAN JUMLAH PEMINJAMAN KENDARAAN";
-
-            // 🔹 Header gambar
-            final headerSection = pw.Center(
+          pageFormat: PdfPageFormat.a4.portrait,
+          margin: const pw.EdgeInsets.fromLTRB(32, 24, 32, 24),
+          build: (context) => [
+            // ===== KOP SURAT =====
+            pw.Center(
+              child: pw.Image(
+                kopSurat,
+                width: PdfPageFormat.a4.availableWidth,
+                alignment: pw.Alignment.center,
+              ),
+            ),
+            // ===== JUDUL =====
+            pw.Center(
               child: pw.Text(
-                "BALAI BESAR POM  DI BANJARBARU",
+                "LAPORAN STATISTIK PEMAKAIAN KENDARAAN DINAS",
                 style: pw.TextStyle(
-                  fontSize: 20,
+                  fontSize: 14,
                   fontWeight: pw.FontWeight.bold,
                   font: pw.Font.times(),
                 ),
               ),
-            );
+            ),
+            pw.SizedBox(height: 15),
 
-            // 🔹 Info laporan
-            final infoSection = [
-              pw.SizedBox(height: 10),
-              pw.Center(
-                child: pw.Text(
-                  title,
-                  style: pw.TextStyle(
-                    fontSize: 14,
-                    fontWeight: pw.FontWeight.bold,
-                    font: pw.Font.times(),
+            // ===== INFO =====
+            pw.Align(
+              alignment: pw.Alignment.centerLeft,
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text(
+                    "Kelompok : ${kelompok!.toUpperCase()}",
+                    style: pw.TextStyle(fontSize: 11, font: pw.Font.times()),
                   ),
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.Align(
-                alignment: pw.Alignment.centerLeft,
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
+                  if (kelompok == "bidang" && selectedDivisi != null)
                     pw.Text(
-                      "Kelompok : ${kelompok?.toUpperCase() ?? '-'}",
+                      "Bidang   : $selectedDivisi",
                       style: pw.TextStyle(fontSize: 11, font: pw.Font.times()),
                     ),
-                    if (isKelompokDivisi && selectedDivisi != null)
-                      pw.Text(
-                        "Bidang   : $selectedDivisi",
-                        style: pw.TextStyle(
-                          fontSize: 11,
-                          font: pw.Font.times(),
-                        ),
-                      ),
-                    pw.Text(
-                      "Periode  : ${(bulan ?? '').toString()} ${(tahun ?? '').toString()}",
-                      style: pw.TextStyle(fontSize: 11, font: pw.Font.times()),
-                    ),
-                  ],
-                ),
-              ),
-              pw.SizedBox(height: 15),
-            ];
-
-            // 🔹 Jika data kosong
-            if (res == null ||
-                (res is List && res.isEmpty) ||
-                (res is Map && (res['data']?.isEmpty ?? true))) {
-              return [
-                headerSection,
-                ...infoSection,
-                pw.Center(
-                  child: pw.Text(
-                    "Tidak ada data untuk periode ini.",
-                    style: pw.TextStyle(fontSize: 12, color: PdfColors.grey700),
+                  pw.Text(
+                    "Periode  : ${durasi == "bulan" ? "${bulan ?? ""} " : ""}${tahun!}",
+                    style: pw.TextStyle(fontSize: 11, font: pw.Font.times()),
                   ),
-                ),
-              ];
-            }
+                ],
+              ),
+            ),
+            pw.SizedBox(height: 15),
 
-            // 🔹 Tabel laporan (menyesuaikan jenis kelompok)
-            late pw.Widget tableSection;
+            // ===== TABEL =====
+            if (kelompok == "bidang")
+              _buildTabelBidang(res)
+            else
+              _buildTabelKendaraan(res),
 
-            if (isKelompokDivisi) {
-              // ✅ Mode "Divisi"
-              final dataList = (res is List) ? res : [];
-              final headers = ["No", "Nama", "Jumlah Pemakaian"];
+            pw.SizedBox(height: 40),
 
-              final dataRows = [
-                for (int i = 0; i < dataList.length; i++)
-                  [
-                    "${i + 1}",
-                    dataList[i]['nama_pengaju'] ?? "-",
-                    (dataList[i]['frekuensi_pemakaian'] ?? "0").toString(),
-                  ],
-              ];
+            pw.Spacer(),
+            // ===== AREA TANDA TANGAN =====
+            pw.Align(
+              alignment: pw.Alignment.centerRight,
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                children: [
+                  pw.Text("Mengetahui,", style: pw.TextStyle(fontSize: 11)),
+                  pw.SizedBox(height: 4),
+                  pw.Text(
+                    "Kepala Tata Usaha",
+                    style: pw.TextStyle(fontSize: 11),
+                  ),
+                  pw.SizedBox(height: 60),
 
-              // Tambahkan total jika ada
-              String? totalDivisi;
-              if (dataList.isNotEmpty &&
-                  dataList[0]['total_per_divisi'] != null) {
-                totalDivisi = dataList[0]['total_per_divisi'].toString();
-              }
-
-              if (totalDivisi != null) {
-                dataRows.add(["", "Total", totalDivisi]);
-              }
-
-              tableSection = pw.TableHelper.fromTextArray(
-                headers: headers,
-                data: dataRows,
-                border: pw.TableBorder.all(
-                  width: 0.5,
-                  color: PdfColors.grey600,
-                ),
-                headerStyle: pw.TextStyle(
-                  fontWeight: pw.FontWeight.bold,
-                  fontSize: 11,
-                  font: pw.Font.times(),
-                ),
-                cellStyle: pw.TextStyle(fontSize: 10, font: pw.Font.times()),
-                headerDecoration: const pw.BoxDecoration(
-                  color: PdfColors.grey300,
-                ),
-                cellAlignment: pw.Alignment.centerLeft,
-                cellHeight: 22,
-              );
-            } else {
-              // ✅ Mode "Kendaraan"
-              final divisiHeaders =
-                  (res['divisi_headers'] as List?)
-                      ?.map((e) => e.toString())
-                      .toList() ??
-                  [];
-              final dataList = (res['data'] as List?) ?? [];
-
-              final headers = ["No", "Kendaraan", ...divisiHeaders];
-
-              final dataRows = [
-                for (int i = 0; i < dataList.length; i++)
-                  [
-                    "${i + 1}",
-                    dataList[i]['nama_kendaraan'] ?? "-",
-                    ...List.generate(
-                      divisiHeaders.length,
-                      (j) => (dataList[i]['frekuensi_divisi']?[j] ?? "0")
-                          .toString(),
-                    ),
-                  ],
-              ];
-
-              tableSection = pw.TableHelper.fromTextArray(
-                headers: headers,
-                data: dataRows,
-                border: pw.TableBorder.all(
-                  width: 0.5,
-                  color: PdfColors.grey600,
-                ),
-                headerStyle: pw.TextStyle(
-                  fontWeight: pw.FontWeight.bold,
-                  fontSize: 10,
-                  font: pw.Font.times(),
-                ),
-                cellStyle: pw.TextStyle(fontSize: 9, font: pw.Font.times()),
-                headerDecoration: const pw.BoxDecoration(
-                  color: PdfColors.grey300,
-                ),
-                cellAlignment: pw.Alignment.center,
-                cellHeight: 20,
-              );
-            }
-
-            return [headerSection, ...infoSection, tableSection];
-          },
+                  pw.Text("Muhammad Fikry Ramadhan,S.E."),
+                  pw.Text(
+                    "________________________",
+                    style: pw.TextStyle(fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       );
 
@@ -471,6 +386,68 @@ class _LaporanFrekuensiFormState extends State<LaporanFrekuensiForm> {
           ],
         ),
       ),
+    );
+  }
+
+  pw.Widget _buildTabelBidang(dynamic res) {
+    final dataList = (res is List) ? res : [];
+
+    final rows = [
+      for (int i = 0; i < dataList.length; i++)
+        [
+          "${i + 1}",
+          dataList[i]['nama_pengaju'] ?? "-",
+          (dataList[i]['frekuensi_pemakaian'] ?? "0").toString(),
+        ],
+    ];
+
+    if (dataList.isNotEmpty && dataList[0]['total_per_divisi'] != null) {
+      rows.add(["", "Total", dataList[0]['total_per_divisi'].toString()]);
+    }
+
+    return pw.Table.fromTextArray(
+      headers: ["No", "Nama", "Jumlah Pemakaian"],
+      data: rows,
+      border: pw.TableBorder.all(width: 0.5),
+      headerStyle: pw.TextStyle(
+        fontWeight: pw.FontWeight.bold,
+        font: pw.Font.times(),
+      ),
+      cellStyle: pw.TextStyle(fontSize: 10, font: pw.Font.times()),
+      headerDecoration: const pw.BoxDecoration(color: PdfColors.grey300),
+      cellAlignment: pw.Alignment.centerLeft,
+    );
+  }
+
+  pw.Widget _buildTabelKendaraan(dynamic res) {
+    final divisiHeaders =
+        (res['divisi_headers'] as List?)?.map((e) => e.toString()).toList() ??
+        [];
+    final dataList = (res['data'] as List?) ?? [];
+
+    final rows = [
+      for (int i = 0; i < dataList.length; i++)
+        [
+          "${i + 1}",
+          dataList[i]['nama_kendaraan'] ?? "-",
+          ...List.generate(
+            divisiHeaders.length,
+            (j) => (dataList[i]['frekuensi_divisi']?[j] ?? "0").toString(),
+          ),
+        ],
+    ];
+
+    return pw.Table.fromTextArray(
+      headers: ["No", "Kendaraan", ...divisiHeaders],
+      data: rows,
+      border: pw.TableBorder.all(width: 0.5),
+      headerStyle: pw.TextStyle(
+        fontWeight: pw.FontWeight.bold,
+        font: pw.Font.times(),
+      ),
+      cellStyle: pw.TextStyle(fontSize: 9, font: pw.Font.times()),
+      headerDecoration: const pw.BoxDecoration(color: PdfColors.grey300),
+      cellAlignment: pw.Alignment.center,
     );
   }
 }

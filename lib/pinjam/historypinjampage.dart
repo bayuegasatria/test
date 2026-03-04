@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:newapp/pinjam/dashboard_bmn.dart';
+import 'package:newapp/pinjam/dashboard.dart';
 import 'package:newapp/pinjam/detailpinjampage.dart';
 import 'package:newapp/pinjam/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -78,9 +78,7 @@ class _HistoryPinjamPageState extends State<HistoryPinjamPage> {
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const DashboardBmn(),
-                          ),
+                          MaterialPageRoute(builder: (_) => const Dashboard()),
                         );
                       },
                       icon: const Icon(Icons.arrow_back, color: Colors.black),
